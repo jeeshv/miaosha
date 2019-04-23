@@ -1,70 +1,91 @@
-package com.imooc.miaosha.controller;/**
- * Created by Administrator on 2019/3/10.
- */
+package com.imooc.miaosha.controller;
 
-import com.imooc.miaosha.domain.User;
-import com.imooc.miaosha.rabbitmq.MQSender;
-import com.imooc.miaosha.redis.RedisService;
-import com.imooc.miaosha.result.Result;
-import com.imooc.miaosha.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.imooc.miaosha.redis.UserKey;
 
-/**
- * @author jeeshv
- * @Description
- * @Date
- **/
+import com.imooc.miaosha.domain.User;
+import com.imooc.miaosha.rabbitmq.MQSender;
+import com.imooc.miaosha.redis.RedisService;
+import com.imooc.miaosha.redis.UserKey;
+import com.imooc.miaosha.result.CodeMsg;
+import com.imooc.miaosha.result.Result;
+import com.imooc.miaosha.service.UserService;
+
 @Controller
 @RequestMapping("/demo")
 public class SampleController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
-    private RedisService redisService;
-    @Autowired
-    private MQSender mqSender;
+    UserService userService;
 
-    @RequestMapping("/")
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    MQSender sender;
+
+//	@RequestMapping("/mq/header")
+//    @ResponseBody
+//    public Result<String> header() {
+//		sender.sendHeader("hello,imooc");
+//        return Result.success("Hello，world");
+//    }
+//
+//	@RequestMapping("/mq/fanout")
+//    @ResponseBody
+//    public Result<String> fanout() {
+//		sender.sendFanout("hello,imooc");
+//        return Result.success("Hello，world");
+//    }
+//
+//	@RequestMapping("/mq/topic")
+//    @ResponseBody
+//    public Result<String> topic() {
+//		sender.sendTopic("hello,imooc");
+//        return Result.success("Hello，world");
+//    }
+//
+//	@RequestMapping("/mq")
+//    @ResponseBody
+//    public Result<String> mq() {
+//		sender.send("hello,imooc");
+//        return Result.success("Hello，world");
+//    }
+
+    @RequestMapping("/hello")
     @ResponseBody
-    String home() {
-        return "Hello World!";
+    public Result<String> home() {
+        return Result.success("Hello，world");
     }
 
-    @RequestMapping("/mq")
+    @RequestMapping("/error")
     @ResponseBody
-    String mq() {
-        mqSender.send("hello imooc");
-        return "Hello World!";
+    public Result<String> error() {
+        return Result.error(CodeMsg.SESSION_ERROR);
     }
 
-     /**
-      *  @author jeeshv
-      *  @Description 仿jsp插件测试
-      *  @Date 23:41 2019/3/11
-      **/
-    @RequestMapping("/thymeleaf")
-    @ResponseBody
-    public String thymeleaf(Model model){
-        model.addAttribute("name","JIM");
+    @RequestMapping("/hello/themaleaf")
+    public String themaleaf(Model model) {
+        model.addAttribute("name", "Joshua");
         return "hello";
     }
 
-     /**
-      *  @author jeeshv
-      *  @Description 查询测试
-      *  @Date 23:41 2019/3/11
-      **/
     @RequestMapping("/db/get")
     @ResponseBody
-    public Result<User> doget(){
+    public Result<User> dbGet() {
         User user = userService.getById(1);
         return Result.success(user);
+    }
+
+
+    @RequestMapping("/db/tx")
+    @ResponseBody
+    public Result<Boolean> dbTx() {
+        userService.tx();
+        return Result.success(true);
     }
 
     @RequestMapping("/redis/get")
@@ -83,15 +104,6 @@ public class SampleController {
         redisService.set(UserKey.getById, ""+1, user);//UserKey:id1
         return Result.success(true);
     }
-     /**
-      *  @author jeeshv
-      *  @Description 事务测试
-      *  @Date 23:41 2019/3/11
-      **/
-    @RequestMapping("/db/tx")
-    @ResponseBody
-    public Result<Boolean> dbtx(){
-        boolean tx = userService.tx();
-        return Result.success(tx);
-    }
+
+
 }
