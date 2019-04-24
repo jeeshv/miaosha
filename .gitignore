@@ -9,7 +9,7 @@
 *.orig
 
 #maven ignore
-target/
+target/*
 
 #eclipse ignore
 .settings/
@@ -18,10 +18,12 @@ target/
 
 #idea
 .idea/
+.idea/*
 /idea/
 *.ipr
 *.iml
 *.iws
+*.class
 
 # temp file
 

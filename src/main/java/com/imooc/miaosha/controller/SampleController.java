@@ -54,6 +54,12 @@ public class SampleController {
 //		sender.send("hello,imooc");
 //        return Result.success("Hello，world");
 //    }
+    //初始化秒杀，删除历史测试记录
+    @RequestMapping("/initMiaosha")
+    @ResponseBody
+    public Result<String> initMiaosha() {
+        return Result.success("Hello，world");
+    }
 
     @RequestMapping("/hello")
     @ResponseBody

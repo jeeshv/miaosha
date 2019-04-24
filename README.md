@@ -2,6 +2,10 @@
 明文密码两次MD5处理
 JSR303参数校验 & 全局异常处理器
 
+###缓存更新模式
+####高性能网站设计之缓存更新的套路
+http://blog.csdn.net/tTU1EvLDeLFq5btqiK/article/details/78693323
+
 ####分布式SESSION
 
 ####实现HandlerMethodArgumentResolver，重写resolveArgument方法，自定义参数解析

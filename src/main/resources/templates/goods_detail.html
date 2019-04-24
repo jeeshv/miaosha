@@ -45,10 +45,17 @@
                 <span th:if="${miaoshaStatus eq 2}">秒杀已结束</span>
             </td>
             <td>
-                <form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
+                <div class="row">
+                    <div class="form-inline">
+                        <img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
+                        <input id="verifyCode"  class="form-control" style="display:none"/>
+                        <button class="btn btn-primary" type="button" id="buyButton" onclick="doMiaosha()">立即秒杀</button>
+                    </div>
+                </div>
+                <!--<form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
                     <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
                     <input type="hidden" name="goodsId" th:value="${goods.id}" />
-                </form>
+                </form>-->
             </td>
         </tr>
         <tr>
@@ -70,7 +77,25 @@
     $(function(){
         countDown();
     });
+    function doMiaosha(){
+        $.ajax({
+            url:"/miaosha/do_miaosha?goodsId=" + $("#goodsId").val(),
+            type:"GET",
 
+            success:function(data){
+                if(data.code == 0){
+                    //window.location.href="/order_detail.htm?orderId="+data.data.id;
+                    getMiaoshaResult($("#goodsId").val());
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+
+    }
 
 
     function countDown(){

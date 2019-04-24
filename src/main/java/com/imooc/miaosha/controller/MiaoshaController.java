@@ -90,10 +90,11 @@ public class MiaoshaController implements InitializingBean {
 	 * 5000 * 10
 	 * QPS: 2114
 	 * */
-	@RequestMapping(value="/do_miaosha", method=RequestMethod.POST)
+	@RequestMapping(value="/do_miaosha", method=RequestMethod.GET)
 	@ResponseBody
 	public Result<Integer> miaosha(Model model,MiaoshaUser user,
-								   @RequestParam("goodsId")long goodsId) {
+								   @RequestParam("goodsId")String goodsIds) {
+		long goodsId = Long.parseLong(goodsIds);
 		model.addAttribute("user", user);
 		if(user == null) {
 			return Result.error(CodeMsg.SESSION_ERROR);
