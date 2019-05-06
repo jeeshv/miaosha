@@ -66,7 +66,8 @@ public class MiaoshaController implements InitializingBean {
 		//商品库存加载到redis
 		for(GoodsVo goods : goodsList) {
 			redisService.set(GoodsKey.getMiaoshaGoodsStock, ""+goods.getId(), goods.getStockCount());
-			//localOverMap.put(goods.getId(), false);
+			//标记还未结束秒杀
+			localOverMap.put(goods.getId(), false);
 		}
 	}
 
@@ -105,14 +106,15 @@ public class MiaoshaController implements InitializingBean {
 			return Result.error(CodeMsg.REQUEST_ILLEGAL);
 		}*/
 		//内存标记，减少redis访问
-		/*boolean over = localOverMap.get(goodsId);
+		boolean over = localOverMap.get(goodsId);
 		if(over) {
 			return Result.error(CodeMsg.MIAO_SHA_OVER);
-		}*/
+		}
 		//预减库存
 		//10
 		long stock = redisService.decr(GoodsKey.getMiaoshaGoodsStock, ""+goodsId);
 		if(stock < 0) {
+			//设置结束秒杀
 			localOverMap.put(goodsId, true);
 			return Result.error(CodeMsg.MIAO_SHA_OVER);
 		}
